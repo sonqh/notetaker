@@ -16,3 +16,9 @@ DerivedData/
 *.me.*
 *.them.*
 /Meetings/
+
+# spec-ctx
+.ctx/index.json
+adopt-report.md
+.ctx/current.json
+.ctx/gate-log.jsonl

@@ -1,0 +1,72 @@
+schema: spec-driven
+
+# Project context (optional)
+# Add only constraints that should guide OpenSpec artifacts and workflows.
+# Include constraints an agent cannot infer by reading the code.
+# Keep general project documentation and discoverable codebase facts out.
+# Example:
+#   context: |
+#     Designs and tasks must cover Windows, macOS, and Linux
+#     Write all artifacts in Spanish
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always state what is out of scope
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
+
+# Per-operation guidance (optional)
+# Add advisory guidance for how apply and archive work should be conducted.
+# This is separate from artifact rules above.
+# Example:
+#   operations:
+#     apply:
+#       guidance:
+#         - Keep test summaries concise
+#     archive:
+#       guidance:
+#         - Summarize the archive outcome before finishing
+
+context: |
+  notetaker is a local-first meeting notes app for macOS, in the style of Granola. No bot joins the call.
+  Swift 6 in one Swift package. No third-party dependency. Deployment target macOS 26. Dev machine: macOS 27, Xcode 27, Swift 6.4, Apple Silicon.
+  The tool makes no network call. The OS may download the Apple speech model. That is the only allowed network use.
+  Everything must work on an MDM-managed Mac without admin rights: no sudo, no drivers, no system folders, user-level installs only.
+  Capture: Core Audio process tap for system audio ("Them"), AVAudioEngine for the microphone ("Me"). Transcription: SpeechAnalyzer, on device, en_US.
+  The app has no LLM. Summaries come from the Claude Code command /summarize-meeting.
+  Measure audio signal. Never trust an audio API return code alone. Never block the audio callback.
+  Decision records live in decisions/. Measurements live in docs/findings.md.
+  Write all prose in English, in short active sentences, by the ste-humanize skill. specctx lint tells and specctx lint ste must pass.
+
+rules:
+  proposal:
+    - 'State what is out of scope.'
+  specs:
+    - 'Every requirement header starts with its ID, e.g. "### Requirement: REQ-ABC-001 Name". Get the ID from `specctx id new REQ ABC`.'
+    - 'Every scenario header starts with its ID, e.g. "#### Scenario: SCN-ABC-001-1 Name".'
+    - 'A requirement may end with a line "Refs: REQ-ABC-002, ADR-001" to link related IDs.'
+    - 'Requirement text stays under 500 characters. Move detail into scenarios.'
+    - 'The templates with the ID placeholders are in openspec/templates/spec-driven-ids/. Start a spec from spec.md and a task list from tasks.md there.'
+  design:
+    - 'Each decision is one bullet under "## Decisions". Add new decisions at the end.'
+  tasks:
+    - 'Every task cites at least one REQ ID in square brackets, e.g. "[REQ-ABC-001]".'
+    - 'Every task states its verification as a command in a code span after "Verify:".'
+    - 'Prefer a Verify command that runs on any Mac, such as `swift test --filter <Name>`. A check that needs real audio hardware goes in a script under scripts/gates/ and says so in the task line.'
+    - 'A task fits in one session of about two hours.'
+
+operations:
+  apply:
+    guidance:
+      - 'Start each task with `specctx task start <id>` and read the bundle it prints before you read specs.'
+      - 'Tag code with the REQ ID it implements (a comment `// REQ-ABC-001`). Tag tests with `// Covers: REQ-ABC-001`.'
+      - 'Close each task only with `specctx task done <id>`. Never edit a checkbox. Never run `/opsx:apply`; run the `specctx-run` skill.'
+      - 'Run `specctx check --strict` after each task group.'
+  archive:
+    guidance:
+      - 'Run `specctx check --strict` and `openspec validate --all --strict`. Both must pass before archive.'
+      - 'Run `openspec validate --all --strict` again after archive and before push.'
