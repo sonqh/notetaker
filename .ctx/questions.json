@@ -1,0 +1,13 @@
+[
+  {
+    "n": 1,
+    "asked_at": "2026-11-03T15:45:28.092Z",
+    "task": "001-package-and-probes",
+    "text": "plan ready for 001-package-and-probes. Approve to start the tasks?",
+    "status": "resolved",
+    "stage": "plan",
+    "verdict": "approved",
+    "answer": "ok",
+    "resolved_at": "2026-11-03T15:49:02.560Z"
+  }
+]
