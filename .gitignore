@@ -1,0 +1,18 @@
+# Swift
+.build/
+.swiftpm/
+*.xcodeproj
+xcuserdata/
+DerivedData/
+
+# macOS
+.DS_Store
+
+# Recordings and transcripts never go in git
+*.wav
+*.caf
+*.m4a
+*.md.partial
+*.me.*
+*.them.*
+/Meetings/
